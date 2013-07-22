@@ -3,8 +3,11 @@
 # Date: August 2009
 # Corresponds to: Listing 6.5
 
+import numpy as np
+import matplotlib.pyplot as plt
 from scipy import linspace, mean, exp, randn
 from scipy.optimize import fminbound
+
 from lininterp import LinInterp     # From listing 6.4
 
 theta, alpha, rho = 0.5, 0.8, 0.9   # Parameters
@@ -76,13 +79,31 @@ def plot_iterations(iters):
 
     axes : list of matplotlib axes.
     """
-    axes = [plt.plot(lin.X, lin.Y, color='k', alpha=.15) for x in lin]
+    axes = [plt.plot(lin.X, lin.Y, color='k', alpha=.15) for lin in iters]
     return axes
+
+#-----------------------------------------------------------------------------
+# Figure 11
+
+
+def get_greedy(w):
+    vals = []
+    for y in grid:
+        h = lambda k: U(y - k) + rho * mean(w(f(k, W)))
+        vals.append(maximizer(h, 0, y))
+    return LinInterp(grid, vals)
 
 
 def main():
+    # Fig 10
     iters = iterates(lambda x: np.sqrt(x),)
     axes = plot_iterations(iters)
+    # Fig 11
+    w = iters[-1]
+    greedy = get_greedy(w)
+    plt.plot(w.X, w.Y, greedy.X, greedy.Y, w.X, w.X)
+    # fig 11
+
 
 if __name__ == '__main__':
     main()
