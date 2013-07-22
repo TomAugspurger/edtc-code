@@ -25,14 +25,14 @@ def get_greedy(w):
         vals.append(maximizer(h, 0, y))
     return LinInterp(grid, vals)
 
-def get_value(sigma, v):    
+def get_value(sigma, v):
     """Computes an approximation to v_sigma, the value
     of following policy sigma. Function v is a guess.
     """
-    tol = 1e-2         # Error tolerance 
+    tol = 1e-2         # Error tolerance
     while 1:
         new_v = T(sigma, v)
         err = max(abs(new_v(grid) - v(grid)))
         if err < tol:
-            return new_v            
+            return new_v
         v = new_v
