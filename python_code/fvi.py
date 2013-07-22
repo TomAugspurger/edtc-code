@@ -32,4 +32,57 @@ def bellman(w):
         vals.append(maximum(h, 0, y))
     return LinInterp(grid, vals)
 
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
 
+# Exercise  6.2.2
+# Figure 10
+
+
+def iterates(initial_w, n_iters=30):
+    """
+    Apply operator T to value function and accumulate the results.
+
+    Parameters
+    ----------
+
+    initial_w : ufunc over grid
+    n_iters : int. Number of times to apply T to the previous value function.
+
+    Returns
+    -------
+
+    iters : list of LinInterps
+    """
+    iters = [initial_w]
+    for i in range(n_iters):
+        Tv = bellman(iters[i])  # i is previous.
+        iters.append(Tv)
+    iters.pop(0)
+    return iters
+
+
+def plot_iterations(iters):
+    """
+    Visualze the results of iterates().
+
+    Parameters
+    ----------
+
+    iters : list of LinInterps
+
+    Returns
+    -------
+
+    axes : list of matplotlib axes.
+    """
+    axes = [plt.plot(lin.X, lin.Y, color='k', alpha=.15) for x in lin]
+    return axes
+
+
+def main():
+    iters = iterates(lambda x: np.sqrt(x),)
+    axes = plot_iterations(iters)
+
+if __name__ == '__main__':
+    main()
