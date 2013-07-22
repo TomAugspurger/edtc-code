@@ -3,6 +3,8 @@
 # Date: August 2009
 # Corresponds to: Listing 6.5
 
+from __future__ import division
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import linspace, mean, exp, randn
@@ -33,7 +35,7 @@ def bellman(w):
     for y in grid:
         h = lambda k: U(y - k) + rho * mean(w(f(k, W)))
         vals.append(maximum(h, 0, y))
-    return LinInterp(grid, vals)
+    return LinInterp(grid, np.array(vals))
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -61,7 +63,7 @@ def iterates(initial_w, n_iters=30):
     for i in range(n_iters):
         Tv = bellman(iters[i])  # i is previous.
         iters.append(Tv)
-    iters.pop(0)
+    iters.pop(0)  # Leave only instances of LinInterp
     return iters
 
 
@@ -90,19 +92,28 @@ def get_greedy(w):
     vals = []
     for y in grid:
         h = lambda k: U(y - k) + rho * mean(w(f(k, W)))
-        vals.append(maximizer(h, 0, y))
-    return LinInterp(grid, vals)
+        vals.append(maximum(h, 0, y))
+    return LinInterp(grid, np.array(vals))
+
+#-----------------------------------------------------------------------------
+# Figure 12
+
+
+# def look_ahead(phi, n=1000):
+#     """Take n draws of X_t-1 and let psi = 1 / n sum p (X_t-1^i y)"""
+#     inside = alpha * np.log(sigma * exp(x))
+#     (1 / n) * sum()
 
 
 def main():
     # Fig 10
-    iters = iterates(lambda x: np.sqrt(x),)
+    iters = iterates(lambda x: np.sqrt(x))
     axes = plot_iterations(iters)
     # Fig 11
     w = iters[-1]
     greedy = get_greedy(w)
+    plt.figure()
     plt.plot(w.X, w.Y, greedy.X, greedy.Y, w.X, w.X)
-    # fig 11
 
 
 if __name__ == '__main__':
