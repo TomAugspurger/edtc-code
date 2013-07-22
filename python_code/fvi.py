@@ -28,7 +28,7 @@ def bellman(w):
     """
     vals = []
     for y in grid:
-        h = lambda k: U(y - k) + rho * mean(w(f(k,W)))
+        h = lambda k: U(y - k) + rho * mean(w(f(k, W)))
         vals.append(maximum(h, 0, y))
     return LinInterp(grid, vals)
 
